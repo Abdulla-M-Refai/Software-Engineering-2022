@@ -4,7 +4,7 @@ import io.cucumber.junit.CucumberOptions;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(features="cases", glue="")
-public class TestAdminLogin 
+public class TestClass 
 {
 
 }
