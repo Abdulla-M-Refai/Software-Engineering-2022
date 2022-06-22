@@ -50,7 +50,12 @@ public class AddBook {
 	@Then("the error message {string} is given")
 	public void the_error_message_is_given(String string) 
 	{
-		assertFalse(string,(app.books.size()==oldSize+1)&&(this.CheckIfBookAdded(book)));
+		boolean result=(app.books.size()==oldSize+1)&&(this.CheckIfBookAdded(book));
+		assertFalse(result);
+		if(!result)
+		{
+			System.out.println(string);
+		}
 	}
 	
 	private boolean CheckIfBookAdded (Book book) 
