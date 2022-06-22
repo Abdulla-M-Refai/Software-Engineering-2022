@@ -21,7 +21,9 @@ public class Application
 	
 	public void logout()
 	{
+	
 		this.isAdminLogedIn=false;
+		
 	}
 	
 	public void addBook(String name,String author,String isbn)
