@@ -2,9 +2,8 @@ import java.util.ArrayList;
 
 public class Application
 {
-	public boolean isAdminLogedIn=false;
-	
 	public ArrayList<Book> books=new ArrayList<Book>();
+	public boolean isAdminLogedIn=false;
 	
 	public String login(String password)
 	{
@@ -16,14 +15,11 @@ public class Application
 		
 		this.isAdminLogedIn=false;
 		return password;
-		
 	}
 	
 	public void logout()
 	{
-	
 		this.isAdminLogedIn=false;
-		
 	}
 	
 	public void addBook(String name,String author,String isbn)
@@ -42,13 +38,18 @@ public class Application
 		}
 	}
 
-	public ArrayList<Book> search(String substring) {
-		ArrayList <Book> result = new ArrayList();
-		for (Book book : books) {
-			if ((book.getName().indexOf(substring)!=-1)||(book.getAuthor().indexOf(substring)!=-1)||(book.getIsbn().indexOf(substring)!=-1)) {
+	public ArrayList<Book> search(String substring) 
+	{
+		ArrayList <Book> result = new ArrayList<Book>();
+		
+		for (Book book : books) 
+		{
+			if ((book.getName().indexOf(substring)!=-1)||(book.getAuthor().indexOf(substring)!=-1)||(book.getIsbn().indexOf(substring)!=-1)) 
+			{
 				result.add(book);
 			}
 		}
+		
 		return result;
 	}
 }

@@ -1,11 +1,11 @@
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-public class AddBook {
+public class AddBook 
+{
 	public Application app;
 	public Book book;
 	public int oldSize;
@@ -37,7 +37,7 @@ public class AddBook {
 	@Then("the book with title {string}, author {string}, and signature {string} is contained in the library")
 	public void the_book_with_title_author_and_signature_is_contained_in_the_library(String string, String string2, String string3) 
 	{
-		assertTrue((app.books.size()==oldSize+1)&&(this.CheckIfBookAdded(new Book(string,string2,string3))));
+		assertTrue((app.books.size()==oldSize+1)&&(this.app.books.contains(new Book(string,string2,string3))));
 	}
 
 	@Given("that the administrator is not logged in")
@@ -50,24 +50,12 @@ public class AddBook {
 	@Then("the error message {string} is given")
 	public void the_error_message_is_given(String string) 
 	{
-		boolean result=(app.books.size()==oldSize+1)&&(this.CheckIfBookAdded(book));
+		boolean result=(app.books.size()==oldSize+1)&&(this.app.books.contains(book));
 		assertFalse(result);
+		
 		if(!result)
 		{
 			System.out.println(string);
 		}
-	}
-	
-	private boolean CheckIfBookAdded (Book book) 
-	{
-		for(Book item : app.books)
-		{
-			if((item.getName().equals(book.getName()))&&(item.getAuthor().equals(book.getAuthor()))&&(item.getIsbn().equals(book.getIsbn())));
-			{
-				return true;
-			}	
-		}
-		
-		return false;
 	}
 }
