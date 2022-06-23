@@ -41,4 +41,14 @@ public class Application
 			books.add(book);
 		}
 	}
+
+	public ArrayList<Book> search(String substring) {
+		ArrayList <Book> result = new ArrayList();
+		for (Book book : books) {
+			if ((book.getName().indexOf(substring)!=-1)||(book.getAuthor().indexOf(substring)!=-1)||(book.getIsbn().indexOf(substring)!=-1)) {
+				result.add(book);
+			}
+		}
+		return result;
+	}
 }

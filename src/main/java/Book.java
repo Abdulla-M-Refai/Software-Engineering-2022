@@ -35,4 +35,9 @@ public class Book
 	public void setIsbn(String isbn) {
 		this.isbn = isbn;
 	}
+	@Override
+	public boolean equals(Object o) {
+		Book book = (Book) o; 
+		return ((this.isbn.equals(book.isbn))&&(this.author.equals(book.author))&&(this.name.equals(book.name)));
+	}
 }
