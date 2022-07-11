@@ -13,4 +13,3 @@ Scenario: Add a book when the adminstrator is not logged in
  	And there is a book with title "Extreme Programming", author "Kent Beck", and signature "Beck99"
 	When the book is added to the library
 	Then the error message "Administrator login required" is given
-	

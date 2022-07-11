@@ -7,9 +7,9 @@ public class Book
 	
 	public Book(String name,String author,String isbn)
 	{
-		this.setName(name);
-		this.setAuthor(author);
-		this.setIsbn(isbn);
+		setName(name);
+		setAuthor(author);
+		setIsbn(isbn);
 	}
 
 	public String getName() 
@@ -48,13 +48,4 @@ public class Book
 		Book book = (Book) o; 
 		return ((this.isbn.equals(book.isbn))&&(this.author.equals(book.author))&&(this.name.equals(book.name)));
 	}
-	
-	@Override
-    public int hashCode() 
-	{
-		final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.isbn == null) ? 0 : this.isbn.hashCode());
-        return result;
-    }
 }
