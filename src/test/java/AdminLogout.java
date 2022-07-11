@@ -3,17 +3,20 @@ import io.cucumber.java.en.When;
 
 public class AdminLogout 
 {
-	public Application app;
+	private Application app;
+	private ErrorMessage errorMessage;
 	
-	public AdminLogout(Application app)
+	public AdminLogout(Application app,ErrorMessage errorMessage)
 	{
-		this.app=app; 
+		this.app=app;
+		this.errorMessage=errorMessage;
 	}
 	
 	@Given("that the admin is logged in")
 	public void that_the_admin_is_logged_in()
 	{
-		app.isAdminLogedIn=true;
+		app.setLogin(true);
+		errorMessage.removeError("Administrator login required");
 	}
 
 	@When("the admin logs out")

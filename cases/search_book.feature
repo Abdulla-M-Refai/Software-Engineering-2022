@@ -26,8 +26,8 @@ Scenario: Searching for a book by the author
 	When the user searches for the text "Seb" 
 	Then the book with code "Rose54" is found
 	
-Scenario: Searching  when the adminis logged in 
-	Given that the admin is logged in 
+Scenario: Searching when the adminis logged in 
+	Given that the admin is logged in
 	When the user searches for the text "Alu" 
 	Then the book with code "Alu07" is found
 	
