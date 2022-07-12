@@ -11,7 +11,10 @@ public class Book
 		setName(name);
 		setAuthor(author);
 		setIsbn(isbn);
+sundos-saifi
 		setAvailability(availability);
+
+main
 	}
 
 	public String getName() 
@@ -53,6 +56,7 @@ public class Book
 	{
 		this.availability = availability;
 	}
+sundos-saifi
 	
 	@Override
 	public boolean equals(Object o) 
@@ -62,4 +66,6 @@ public class Book
 				(this.author.equals(book.author)) &&
 				(this.name.equals(book.name)));
 	}
+
+main
 }
