@@ -5,10 +5,10 @@ Feature: Searching for books based on title,author or code
 Background: The library has a set of books 
 	Given that the admin is logged in 
 	And these books are contained in the library 
-		| XP Programming Book | Kent Beck |Kent99 |
-		| C++ Development | Alu and Sami |Alu07 |
-		| Cucumber Java | Seb Rose | Rose54 |
-		| programming C++ | Deitel | Deitel4 |
+		| XP Programming Book | Kent Beck    | Kent99  |
+		| C++ Development     | Alu and Sami | Alu07   |
+		| Cucumber Java       | Seb Rose     | Rose54  |
+		| programming C++     | Deitel       | Deitel4 |
 	And the admin logs out 
 	
 Scenario: Searching for a book by the code 
@@ -26,8 +26,8 @@ Scenario: Searching for a book by the author
 	When the user searches for the text "Seb" 
 	Then the book with code "Rose54" is found
 	
-Scenario: Searching  when the adminis logged in 
-	Given that the admin is logged in 
+Scenario: Searching when the adminis logged in 
+	Given that the admin is logged in
 	When the user searches for the text "Alu" 
 	Then the book with code "Alu07" is found
 	
