@@ -56,7 +56,11 @@ public class Application
 	
 	public void addBook(String name,String author,String isbn)
 	{
+sundos-saifi
+		books.add(new Book(name,author,isbn,true));
+=======
 		books.add(new Book(name,author,isbn));
+main
 	}
 	
 	public void addBook(Book book)
@@ -67,6 +71,45 @@ public class Application
 	public ArrayList<Book> search(final String substring) 
 	{
 		return new ArrayList<Book>(books.stream()
+sundos-saifi
+										.filter(e->(e.getName()
+												     .indexOf(substring)!=-1)||
+												   (e.getAuthor()
+													 .indexOf(substring)!=-1)||
+												   (e.getIsbn()
+													 .indexOf(substring)!=-1))
+										.collect(Collectors.toList()));
+	}
+
+	public void registerUser(final User user)
+	{
+		if(!(users.stream()
+			 .filter(e->(e.equals(user)||e.getId()==user.getId()||e.getEmail()==user.getEmail()))
+			 .collect(Collectors.toList())
+			 .size()==1))
+		{
+			users.add(user);
+		}
+	}
+
+	public void borrowBook(User user, Book book)
+	{
+		boolean firstCondition  = users.get(users.indexOf(user))
+				                       .getBorrowedBooks()
+				                       .size()<5;
+		
+		boolean secondCondition = books.get(books.indexOf(book))
+				                       .getAvailability();
+		
+		if(firstCondition&&secondCondition)
+		{
+			users.get(users.indexOf(user))
+			     .getBorrowedBooks()
+			     .add(book);
+			
+			books.get(books.indexOf(book))
+			     .setAvailability(false);
+
 										.filter(e->(e.getName().indexOf(substring)!=-1)
 												||(e.getAuthor().indexOf(substring)!=-1)
 												||(e.getIsbn().indexOf(substring)!=-1))
@@ -81,6 +124,7 @@ public class Application
 			 .size()==1))
 		{
 			users.add(user);
+main
 		}
 	}
 }

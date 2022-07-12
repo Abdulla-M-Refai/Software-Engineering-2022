@@ -22,7 +22,11 @@ public class AddBook
 	@Given("that the administrator is logged in")
 	public void that_the_administrator_is_logged_in() 
 	{
+sundos-saifi
+	   app.setLogin(true);
+
 	   app.setLogin(true);;
+main
 	   oldSize=app.getBooks().size();
 	   errorMessage.removeError("Administrator login required");
 	}
@@ -30,7 +34,7 @@ public class AddBook
 	@Given("there is a book with title {string}, author {string}, and signature {string}")
 	public void there_is_a_book_with_title_author_and_signature(String string, String string2, String string3) 
 	{
-	    book=new Book(string,string2,string3);
+	    book=new Book(string,string2,string3,true);
 	}
 
 	@When("the book is added to the library")
@@ -45,7 +49,11 @@ public class AddBook
 	@Then("the book with title {string}, author {string}, and signature {string} is contained in the library")
 	public void the_book_with_title_author_and_signature_is_contained_in_the_library(String string, String string2, String string3) 
 	{
+sundos-saifi
+		assertTrue(this.app.getBooks().contains(new Book(string,string2,string3,true)));
+
 		assertTrue(this.app.getBooks().contains(new Book(string,string2,string3)));
+main
 	}
 
 	@Given("that the administrator is not logged in")

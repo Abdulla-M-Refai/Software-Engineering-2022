@@ -4,12 +4,17 @@ public class Book
 	private String name;
 	private String author;
 	private String isbn;
+	private boolean availability;
 	
-	public Book(String name,String author,String isbn)
+	public Book(String name,String author,String isbn,boolean availability)
 	{
 		setName(name);
 		setAuthor(author);
 		setIsbn(isbn);
+sundos-saifi
+		setAvailability(availability);
+
+main
 	}
 
 	public String getName() 
@@ -42,10 +47,25 @@ public class Book
 		this.isbn = isbn;
 	}
 	
+	public boolean getAvailability() 
+	{
+		return availability;
+	}
+
+	public void setAvailability(boolean availability) 
+	{
+		this.availability = availability;
+	}
+sundos-saifi
+	
 	@Override
 	public boolean equals(Object o) 
 	{
 		Book book = (Book) o; 
-		return ((this.isbn.equals(book.isbn))&&(this.author.equals(book.author))&&(this.name.equals(book.name)));
+		return ((this.isbn.equals(book.isbn))     &&
+				(this.author.equals(book.author)) &&
+				(this.name.equals(book.name)));
 	}
+
+main
 }

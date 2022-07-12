@@ -6,18 +6,31 @@ Feature: Register User
 Background: The system has a set of users
 	Given that the admin is logged in 
 	And those users are registered in the system 
+sundos-saifi
+		| 2984754 | abdullah refai | abdullah@gmail.com  | Nablus street  | QY77SW | Nablus  |
+		| 2984755 | sundos saifi   | sundos@gmail.com    | Tell Street    | A1TY25 | Tell    |
+		| 2984766 | yaqeen yaseen  | yaqeen@gmail.com    | Aseerah street | YZ21T3 | Aseerah |
+	And the admin logs out 
+	
+Scenario: register a user when admin is logged in
+
 		| 2984754 | abdullah refai | abdullah@gmail.com  | Nablus street | QY77SW | Nablus |
 		| 2984755 | sundos saifi | sundos@gmail.com  | Tell Street | A1TY25 | Tell |
 		| 2984766 | yaqeen yaseen | yaqeen@gmail.com  | Aseerah street | YZ21T3 | Aseerah |
 	And the admin logs out 
 	
 Scenario: admin is logged in
+main
 	Given that the admin is logged in
 	And there is a user with ID:2984744 Name:"Ahmad Ali" Email:"ahm@gmail.com" Address:"Nablus street" Postal Code:"H3H1T5" City:"Nablus"
 	When the user is registered
 	Then the user with ID:2984744 Name:"Ahmad Ali" Email:"ahm@gmail.com" Address:"Nablus street" Postal Code:"H3H1T5" City:"Nablus" registered successfully
 	
+sundos-saifi
+Scenario: register an existing user when admin is logged in
+
 Scenario: admin is logged in
+main
 	Given that the admin is logged in
 	And there is a user with ID:2984766 Name:"yaqeen yaseen" Email:"yaqeen@gmail.com" Address:"Aseerah street" Postal Code:"YZ21T3" City:"Aseerah"
 	When the user is registered
