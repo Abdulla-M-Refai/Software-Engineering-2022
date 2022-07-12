@@ -22,8 +22,15 @@ public class Search
 		{
 			app.getBooks().add(new Book(dataTable.row(i).get(0),
 										dataTable.row(i).get(1),
+
 										dataTable.row(i).get(2),
 										true));
+
+										dataTable.row(i).get(2),
+										true));
+
+										dataTable.row(i).get(2)));
+
 		}
 	}
 

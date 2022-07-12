@@ -11,7 +11,12 @@ public class Book
 		setName(name);
 		setAuthor(author);
 		setIsbn(isbn);
+
 		setAvailability(availability);
+
+		setAvailability(availability);
+
+
 	}
 
 	public String getName() 
@@ -47,12 +52,20 @@ public class Book
 	public boolean getAvailability() 
 	{
 		return availability;
+
+	}
+
+	public void setAvailability(boolean availability) 
+	{
+		this.availability = availability;
+
 	}
 
 	public void setAvailability(boolean availability) 
 	{
 		this.availability = availability;
 	}
+
 	
 	@Override
 	public boolean equals(Object o) 
@@ -62,4 +75,5 @@ public class Book
 				(this.author.equals(book.author)) &&
 				(this.name.equals(book.name)));
 	}
+
 }

@@ -98,11 +98,14 @@ public class BorrowBook
 		
 		if(!(errorMessage.contains("User Not Found")||errorMessage.contains("Book Not Found")))
 		{
+
 			oldSize=app.getUsers()
 					   .get(app.getUsers().indexOf(user))
 					   .getBorrowedBooks()
 					   .size();
-			
+
+			oldSize=app.getUsers().get(app.getUsers().indexOf(user)).getBorrowedBooks().size();
+
 		    app.borrowBook(user,book);
 		}
 	}

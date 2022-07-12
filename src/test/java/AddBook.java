@@ -9,10 +9,15 @@ public class AddBook
 	private Application app;
 	private ErrorMessage errorMessage;
 	private LogFile logFile;
-	
+
 	private Book book;
 	private int oldSize;
 	
+
+	private Book book;
+	private int oldSize;
+	
+
 	public AddBook(Application app,ErrorMessage errorMessage,LogFile logFile)
 	{
 		this.app=app;
@@ -24,6 +29,11 @@ public class AddBook
 	public void that_the_administrator_is_logged_in() 
 	{
 	   app.setLogin(true);
+
+	   app.setLogin(true);
+
+	   app.setLogin(true);;
+
 	   oldSize=app.getBooks().size();
 	   errorMessage.removeError("Administrator login required");
 	}
@@ -46,7 +56,13 @@ public class AddBook
 	@Then("the book with title {string}, author {string}, and signature {string} is contained in the library")
 	public void the_book_with_title_author_and_signature_is_contained_in_the_library(String string, String string2, String string3) 
 	{
+
 		assertTrue(this.app.getBooks().contains(new Book(string,string2,string3,true)));
+
+		assertTrue(this.app.getBooks().contains(new Book(string,string2,string3,true)));
+
+		assertTrue(this.app.getBooks().contains(new Book(string,string2,string3)));
+
 	}
 
 	@Given("that the administrator is not logged in")

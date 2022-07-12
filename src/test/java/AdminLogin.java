@@ -7,10 +7,16 @@ public class AdminLogin
 {
 	private Application app;
 	private ErrorMessage errorMessage;
+
 	
 	private String realPassword;
 	private String expected="adminadmin";
 	
+
+	private String realPassword;
+	private String expected="adminadmin";
+	
+
 	public AdminLogin(Application app,ErrorMessage errorMessage)
 	{
 		this.app=app; 
