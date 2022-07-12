@@ -4,12 +4,14 @@ public class Book
 	private String name;
 	private String author;
 	private String isbn;
+	private boolean availability;
 	
-	public Book(String name,String author,String isbn)
+	public Book(String name,String author,String isbn,boolean availability)
 	{
-		this.setName(name);
-		this.setAuthor(author);
-		this.setIsbn(isbn);
+		setName(name);
+		setAuthor(author);
+		setIsbn(isbn);
+		setAvailability(availability);
 	}
 
 	public String getName() 
@@ -42,19 +44,22 @@ public class Book
 		this.isbn = isbn;
 	}
 	
+	public boolean getAvailability() 
+	{
+		return availability;
+	}
+
+	public void setAvailability(boolean availability) 
+	{
+		this.availability = availability;
+	}
+	
 	@Override
 	public boolean equals(Object o) 
 	{
 		Book book = (Book) o; 
-		return ((this.isbn.equals(book.isbn))&&(this.author.equals(book.author))&&(this.name.equals(book.name)));
+		return ((this.isbn.equals(book.isbn))     &&
+				(this.author.equals(book.author)) &&
+				(this.name.equals(book.name)));
 	}
-	
-	@Override
-    public int hashCode() 
-	{
-		final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.isbn == null) ? 0 : this.isbn.hashCode());
-        return result;
-    }
 }

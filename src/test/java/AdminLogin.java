@@ -5,50 +5,53 @@ import io.cucumber.java.en.Then;
 
 public class AdminLogin 
 {
-	public Application app;
-	public String password;
-	public String realPassword;
+	private Application app;
+	private ErrorMessage errorMessage;
 	
-	public AdminLogin(Application app)
+	private String realPassword;
+	private String expected="adminadmin";
+	
+	public AdminLogin(Application app,ErrorMessage errorMessage)
 	{
 		this.app=app; 
+		this.errorMessage=errorMessage;
 	}
 	
 	@Given("that the admin is not logged in")
 	public void that_the_admin_is_not_logged_in() 
 	{
-		app.isAdminLogedIn=false;
+		app.setLogin(false);
+		errorMessage.appendError("Administrator login required");
 	}
 
 	@Given("the password is {string}")
 	public void the_password_is(String string) 
 	{
-	    realPassword=app.login(string);
+		realPassword=string;
+	    app.login(string);
 	}
 	
 	@Then("the admin login succeeds")
 	public void the_admin_login_succeeds() 
 	{
-		String expected="adminadmin";
 		assertTrue(expected.equals(realPassword));
 	}
 
 	@Then("the admin is logged in")
 	public void the_admin_is_logged_in() 
 	{
-	   assertTrue(app.isAdminLogedIn);
+	   assertTrue(app.getLogin());
 	}
 
 	@Then("the admin login fails")
 	public void the_admin_login_fails() 
 	{
-		String expected="adminadmin";
 		assertFalse(expected.equals(realPassword));
 	}
 
 	@Then("the admin is not logged in")
 	public void the_admin_is_not_logged_in() 
 	{
-		assertFalse(app.isAdminLogedIn);
+		assertFalse(app.getLogin());
 	}
 }

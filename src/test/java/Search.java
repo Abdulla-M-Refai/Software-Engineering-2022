@@ -1,13 +1,14 @@
 import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 public class Search 
 {
-	public Application app;
-	public ArrayList <Book> result;
+	private Application app;
+	private ArrayList <Book> result;
 	
 	public Search(Application app)
 	{
@@ -19,7 +20,10 @@ public class Search
 	{
 		for (int i=0; i < dataTable.height();i++) 
 		{
-			app.books.add(new Book(dataTable.row(i).get(0),dataTable.row(i).get(1),dataTable.row(i).get(2)));
+			app.getBooks().add(new Book(dataTable.row(i).get(0),
+										dataTable.row(i).get(1),
+										dataTable.row(i).get(2),
+										true));
 		}
 	}
 
@@ -32,28 +36,23 @@ public class Search
 	@Then("the book with code {string} is found")
 	public void the_book_with_code_is_found(String string) 
 	{
-		assertTrue(this.result.get(this.result.size()-1).getIsbn().equals(string));
+		assertTrue(result.get(result.size()-1).getIsbn().equals(string));
 	}
 
 	@Then("no books are found")
 	public void no_books_are_found() 
 	{
-		assertTrue(this.result.size()==0);
+		assertTrue(result.size()==0);
 	}
 
 	@Then("the books with code {string} and {string} are found")
 	public void the_books_with_code_and_are_found(String string, String string2) 
 	{
-		boolean flag = true ;
-		
-		for (int i=0 ; i<result.size();i++) 
-		{
-			if (!((result.get(i).getIsbn().equals(string))||(result.get(i).getIsbn().equals(string2)))) 
-			{
-				flag = false;
-			}
-		}
-		
-		assertTrue(flag);
+		assertTrue
+		(
+			result.stream()
+			  	  .filter(e->(e.getIsbn().equals(string)||e.getIsbn().equals(string2)))
+			  	  .collect(Collectors.toList()).size()>1
+		);
 	}
 }
