@@ -1,7 +1,9 @@
 import static org.junit.Assert.assertTrue;
+
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+
 import se.elib.Application;
 import se.elib.User;
 
@@ -50,6 +52,6 @@ public class UserRegisteration
 	@Then("the user with ID:{int} Name:{string} Email:{string} Address:{string} Postal Code:{string} City:{string} registered successfully")
 	public void the_user_with_id_name_email_address_postal_code_city_registered_successfully(Integer int1, String string, String string2, String string3, String string4, String string5) 
 	{
-	   assertTrue(app.getUsers().contains(new User(int1,string,string2,string3,string4,string5))&&app.getUsers().size()==oldSize+1);
+	   assertTrue(app.getUsers().contains(new User(int1,string,string2,string3,string4,string5))&&(app.getUsers().size()==oldSize+1));
 	}
 }

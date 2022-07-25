@@ -1,16 +1,21 @@
 package se.elib;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class User 
 {
 	private int id;
+	private int totalFines;
+	
 	private String name;
 	private String email;
 	private String address;
 	private String postCode;
 	private String city;
+	
 	private ArrayList<Book> borrowedBooks;
 	
 	public User(int id,String name,String email,String address,String postCode,String city)
@@ -22,6 +27,7 @@ public class User
 		setPostCode(postCode);
 		setCity(city);
 		setBorrowedBooks(new ArrayList<>());
+		setTotalFines(0);
 	}
 
 	public int getId() 
@@ -92,6 +98,45 @@ public class User
 	public void setBorrowedBooks(List<Book> borrowedBooks) 
 	{
 		this.borrowedBooks = (ArrayList<Book>) borrowedBooks;
+	}
+	
+	public void borrowBook(Book book,Calendar borrowDate)
+	{
+		Calendar dueDate = new GregorianCalendar();
+		dueDate.setTime(borrowDate.getTime());
+		dueDate.add(Calendar.DAY_OF_YEAR, 21);
+		
+		borrowedBooks.add(book);
+		book.setAvailability(false);
+		
+		book.setBorrowDate(borrowDate);
+		book.setDueDate(dueDate);
+		book.setOverDue(false);
+	}
+	
+	public void returnBook(Book book) 
+	{
+		borrowedBooks.remove(book);
+		book.setAvailability(true);
+		
+		book.setBorrowDate(null);
+		book.setDueDate(null);
+		book.setOverDue(false);
+	}
+	
+	public int getTotalFines() 
+	{
+		return totalFines;
+	}
+
+	public void setTotalFines(int totalFines) 
+	{
+		this.totalFines = totalFines;
+	}
+	
+	public void addFine(int value)
+	{
+		totalFines+=value;
 	}
 	
 	@Override

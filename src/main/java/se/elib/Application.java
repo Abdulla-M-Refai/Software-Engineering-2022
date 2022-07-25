@@ -3,10 +3,12 @@ package se.elib;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
+
 import org.apache.log4j.Logger;
 
 public class Application
@@ -14,13 +16,20 @@ public class Application
 	private ArrayList<User> users;
 	private ArrayList<Book> books;
 	private boolean isAdminLogedIn;
-	private Logger logger = Logger.getLogger(Application.class);
+	
+	private DateServer dateServer;
+	private EmailServer emailServer;
+	private Logger logger;
 	
 	public Application()
 	{
 		setUsers(new ArrayList<>());
 		setBooks(new ArrayList<>());
 		setLogin(false);
+		
+		setEmailServer(new EmailServer());
+		setDateServer(new DateServer());
+		logger=Logger.getLogger(Application.class);
 	}
 	
 	public void setLogin(boolean isAdminLogedIn)
@@ -59,6 +68,58 @@ public class Application
 		return books;
 	}
 	
+	public void setDateServer(DateServer dateServer) throws IllegalArgumentException
+	{
+		if(dateServer==null)
+			{throw new IllegalArgumentException("Date Server is null");}
+		
+		this.dateServer=dateServer;
+	}
+	
+	public DateServer getDateServer()
+	{
+		return dateServer;
+	}
+	
+	public EmailServer getEmailServer() 
+	{
+		return emailServer;
+	}
+
+	public void setEmailServer(EmailServer emailServer) 
+	{
+		this.emailServer = emailServer;
+	}
+	
+	public void sendReminder()
+	{
+		users.stream().forEach(e->
+		{
+			boolean []flag= {false};
+			
+			e.getBorrowedBooks().stream().forEach(i->
+			{
+				if(i.getOverDue())
+					{flag[0]=true;}
+			});
+			
+			if(flag[0])
+				{emailServer.sendEmail(e.getEmail(), "Late book(s)", "You have n late book(s)");}
+		});
+	}
+	
+	public void checkOverDueBooks()
+	{
+		users.stream().forEach(e->
+		{
+			e.getBorrowedBooks().stream().forEach(i->
+			{
+				if(i.checkOverDue(dateServer.getDate()))
+					{i.setOverDue(true); e.addFine(Book.BOOK_FINE);}
+			});
+		});
+	}
+	
 	public void login(String password)
 	{
 		try (InputStream input = new FileInputStream("config.properties")) 
@@ -89,7 +150,7 @@ public class Application
 		else if(name.isBlank()||author.isBlank()||isbn.isBlank()) 
 			{throw new IllegalArgumentException("book information is not valid");}
 		
-		books.add(new Book(name,author,isbn,true));
+		books.add(new Book(name,author,isbn));
 	}
 	
 	public List<Book> search(final String substring) throws IllegalArgumentException
@@ -126,68 +187,65 @@ public class Application
 				.filter(e->(e.getId()==id||e.getEmail().equals(email)))
 				.collect(Collectors.toList())
 				.size()!=1)
-		{users.add(new User(id,name,email,address,postalCode,city));}
+			{users.add(new User(id,name,email,address,postalCode,city));}
 		
 		else
 			{throw new IllegalStateException ("This user is already registered");}
 	}
-
+	
+	public void unregisterUser(User user) 
+	{
+		if(!isAdminLogedIn) 
+			{throw new IllegalStateException ("Administrator login required");}
+	
+		else if(user==null||users.indexOf(user)==-1) 
+			{throw new IllegalArgumentException("user not found");}
+	
+		else if(users.get(users.indexOf(user)).getBorrowedBooks().size()!=0)
+			{throw new IllegalStateException("you can't unregister this user because he have some borrowed books to return");}
+		
+		else if(users.get(users.indexOf(user)).getTotalFines()!=0)
+			{throw new IllegalStateException("you can't unregister this user because he has fines to pay");}
+		
+		users.remove(user);
+	}
+	
 	public void borrowBook(User user, Book book) throws IllegalStateException , IllegalArgumentException
 	{
-		if(!isAdminLogedIn)
-			{throw new IllegalStateException ("Administrator login required");}
-		
-		else if(user==null) 
+		if(user==null||users.indexOf(user)==-1) 
 			{throw new IllegalArgumentException("User not found");}
 	
-		else if(book==null) 
+		else if(book==null||books.indexOf(book)==-1) 
 			{throw new IllegalArgumentException("Book not found");}
 		
-		else if(!books.get(books.indexOf(book)).getAvailability())
-			{throw new IllegalStateException ("Book is not available");}
+		else if(users.get(users.indexOf(user)).getBorrowedBooks().stream().filter(e->e.getOverDue()).collect(Collectors.toList()).size()!=0)
+			{throw new IllegalStateException ("You can't borrow any new book because you have an overdue books");}
+		
+		else if(users.get(users.indexOf(user)).getTotalFines()!=0)
+			{throw new IllegalStateException ("Can't borrow book you have fines");}
 		
 		else if(users.get(users.indexOf(user)).getBorrowedBooks().size()>=5)
 			{throw new IllegalStateException ("you can't borrow more than five books");}
 		
-		boolean firstCondition  = users.get(users.indexOf(user))
-				                       .getBorrowedBooks()
-				                       .size()<5;
+		else if(!books.get(books.indexOf(book)).getAvailability())
+			{throw new IllegalStateException ("Book is not available");}
 		
-		boolean secondCondition = books.get(books.indexOf(book))
-				                       .getAvailability();
-		
-		if(firstCondition&&secondCondition)
-		{
-			users.get(users.indexOf(user))
-			     .getBorrowedBooks()
-			     .add(book);
-			
-			books.get(books.indexOf(book))
-			     .setAvailability(false);
-		}
+		users.get(users.indexOf(user))
+ 			 .borrowBook(books.get(books.indexOf(book)), dateServer.getDate());
 	}
 
 	public void returnBook(User user, Book book) throws IllegalStateException , IllegalArgumentException
 	{
-		if(!isAdminLogedIn)
-			{throw new IllegalStateException ("Administrator login required");}
-		
-		else if(user==null) 
+		if(user==null||users.indexOf(user)==-1) 
 			{throw new IllegalArgumentException("User not found");}
 		
-		else if(book==null) 
+		else if(book==null||books.indexOf(book)==-1) 
 			{throw new IllegalArgumentException("Book not found");}
-		
-		else if(users.indexOf(user)==-1)
-			{throw new IllegalStateException ("this book is not borrowed by you");}
 		
 		else if(users.get(users.indexOf(user)).getBorrowedBooks().indexOf(book)==-1)
 			{throw new IllegalStateException ("this book is not borrowed by you");}
 		
 		users.get(users.indexOf(user))
-	         .getBorrowedBooks()
-	         .remove(users.get(users.indexOf(user)).getBorrowedBooks().indexOf(book));
-	
-	    books.get(books.indexOf(book)).setAvailability(true);
+		 	 .returnBook(books.get(books.indexOf(book)));
 	}
 }

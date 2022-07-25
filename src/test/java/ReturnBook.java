@@ -1,8 +1,10 @@
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+
 import se.elib.Application;
 import se.elib.Book;
 import se.elib.User;
@@ -31,7 +33,8 @@ public class ReturnBook
 	    	if(e.getIsbn().equals(string))
 	    	{
 	    		e.setAvailability(available);
-	    		book=new Book(e.getName(),e.getAuthor(),e.getIsbn(),available);
+	    		book=new Book(e.getName(),e.getAuthor(),e.getIsbn());
+	    		book.setAvailability(available);
 	    	}
 	    });
 	}
@@ -56,7 +59,6 @@ public class ReturnBook
 	@Given("that user with ID:{int} is registered and the book borrowed by him")
 	public void that_user_with_id_is_registered_and_the_book_borrowed_by_him(Integer int1) 
 	{
-		user=null;
 	    findUser(int1);
 	    
 	    app.getUsers()
@@ -106,7 +108,6 @@ public class ReturnBook
 	@Given("that user with ID:{int} is not registered")
 	public void that_user_with_id_is_not_registered(Integer int1) 
 	{
-		user=null;
 	    findUser(int1);
 	    
 	    if(user!=null){user.getBorrowedBooks().add(book);}
@@ -115,7 +116,6 @@ public class ReturnBook
 	@Given("that the book with ISBN:{string} is a non existing book")
 	public void that_the_book_with_isbn_is_a_non_existing_book(String string) 
 	{
-	    book=null;
 	    findBook(string,false);
 	}
 

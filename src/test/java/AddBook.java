@@ -1,8 +1,10 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+
 import se.elib.Application;
 import se.elib.Book;
 
@@ -32,7 +34,7 @@ public class AddBook
 	@Given("there is a book with title {string}, author {string}, and signature {string}")
 	public void there_is_a_book_with_title_author_and_signature(String string, String string2, String string3) 
 	{
-	    book=new Book(string,string2,string3,true);
+	    book=new Book(string,string2,string3);
 	}
 
 	@When("the book is added to the library")
@@ -47,7 +49,7 @@ public class AddBook
 	@Then("the book with title {string}, author {string}, and signature {string} is contained in the library")
 	public void the_book_with_title_author_and_signature_is_contained_in_the_library(String string, String string2, String string3) 
 	{
-		assertTrue(app.getBooks().contains(new Book(string,string2,string3,true))&&app.getBooks().size()==oldSize+1);
+		assertTrue(app.getBooks().contains(new Book(string,string2,string3))&&(app.getBooks().size()==oldSize+1));
 	}
 
 	@Given("that the administrator is not logged in")

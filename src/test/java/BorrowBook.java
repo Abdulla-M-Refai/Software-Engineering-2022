@@ -1,8 +1,10 @@
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+
 import se.elib.Application;
 import se.elib.Book;
 import se.elib.User;
@@ -31,7 +33,8 @@ public class BorrowBook
 	    	if(e.getIsbn().equals(string))
 	    	{
 	    		e.setAvailability(available);
-	    		book=new Book(e.getName(),e.getAuthor(),e.getIsbn(),available);
+	    		book=new Book(e.getName(),e.getAuthor(),e.getIsbn());
+	    		book.setAvailability(available);
 	    	}
 	    });
 	}
@@ -54,11 +57,10 @@ public class BorrowBook
 		{
 			app.getBooks().add(new Book(dataTable.row(i).get(0),
 										dataTable.row(i).get(1),
-										dataTable.row(i).get(2),
-										true));
+										dataTable.row(i).get(2)));
 		}
 	}
-
+	
 	@Given("those users registered in the system")
 	public void those_users_registered_in_the_system(io.cucumber.datatable.DataTable dataTable) 
 	{
@@ -75,72 +77,55 @@ public class BorrowBook
 	{
 		findBook(string,true);
 	}
-
+	
 	@Given("a user with ID:{int} is registered")
 	public void a_user_with_id_is_registered(Integer int1) 
 	{
 		findUser(int1);
 	}
-
+	
 	@When("the user borrows that book")
 	public void the_user_borrows_that_book() 
 	{
 		oldSize=(user!=null&&book!=null)?app.getUsers()
-				   			    			.get(app.getUsers().indexOf(user))
-			   			    				.getBorrowedBooks()
-			   			    				.size()            
-			   			    			:-1;
-		
+	    			                        .get(app.getUsers().indexOf(user))
+	    			                        .getBorrowedBooks()
+	    			                        .size()            
+	    			                    :-1;
+
 		try{app.borrowBook(user,book);}
 			catch(IllegalStateException|IllegalArgumentException ex) 
 				{errorMessage.setException(ex); logFile.appendMessage(ex.getMessage());}
-	    
 	}
-
+	
 	@Then("the book will be borrowed successfully")
 	public void the_book_will_be_borrowed_successfully() 
 	{
 		boolean firstCondition  = app.getUsers()
-				                     .get(app.getUsers().indexOf(user))
-				                     .getBorrowedBooks()
-				                     .contains(book);
-		
+                				     .get(app.getUsers().indexOf(user))
+                				     .getBorrowedBooks()
+                				     .contains(book);
+
 		boolean secondCondition = app.getUsers()
-				                     .get(app.getUsers().indexOf(user))
-				                     .getBorrowedBooks()
-				                     .size()==oldSize+1;
-		
+		                	         .get(app.getUsers().indexOf(user))
+		                	         .getBorrowedBooks()
+		                	         .size()==oldSize+1;
+
 		assertTrue(firstCondition&&secondCondition);
 	}
-
+	
 	@Then("the book will not be available")
 	public void the_book_will_not_be_available() 
 	{
-	    assertFalse(app.getBooks()
-	    		       .get(app.getBooks().indexOf(book))
-	    		       .getAvailability());
+		assertFalse(app.getBooks()
+ 		               .get(app.getBooks().indexOf(book))
+ 		               .getAvailability());
 	}
-
+	
 	@Given("that the book with ISBN:{string} is unavailable")
 	public void that_the_book_with_isbn_is_unavailable(String string) 
 	{
 		findBook(string,false);
-	}
-	
-	@Then("the book will not be borrowed")
-	public void the_book_will_not_be_borrowed() 
-	{	
-		boolean firstCondition  = app.getUsers()
-                				     .get(app.getUsers().indexOf(user))
-                				     .getBorrowedBooks()
-                				     .contains(book);
-		
-		boolean secondCondition = app.getUsers()
-	                				 .get(app.getUsers().indexOf(user))
-	                                 .getBorrowedBooks()
-	                                 .size()==oldSize+1;
-		
-		assertFalse(firstCondition&&secondCondition);
 	}
 	
 	@Given("a user with ID:{int} is not registered")
@@ -152,9 +137,9 @@ public class BorrowBook
 	@Given("that the book with ISBN:{string} is given")
 	public void that_the_book_with_isbn_is_given(String string) 
 	{
-	    findBook(string,true);
+		findBook(string,true);
 	}
-
+	
 	@Given("that a user with ID:{int} is registered and borrowed these books with ISBNs:{string} {string} {string} {string} {string}")
 	public void that_a_user_with_id_is_registered_and_borrowed_these_books_with_isb_ns(Integer int1, String string, String string2, String string3, String string4, String string5) 
 	{
@@ -170,14 +155,76 @@ public class BorrowBook
 	    		app.getUsers()
 	    		   .get(app.getUsers().indexOf(user))
 	    		   .getBorrowedBooks()
-	    		   .add(new Book(e.getName(),e.getAuthor(),e.getIsbn(),e.getAvailability()));
+	    		   .add(e);
 	    	}
 	    });
 	}
-
+	
 	@Given("an book with ISBN:{string} is available")
 	public void an_book_with_isbn_is_available(String string) 
 	{
 		findBook(string,true);
+	}
+	
+	@Given("a book with code {string} is in the library")
+	public void a_book_with_code_is_in_the_library(String string) 
+	{
+		book=new Book("DataBase","Ali",string);
+		app.login("adminadmin");
+		app.addBook("DataBase","Ali",string);
+	}
+	
+	@Given("a user is registered with the library")
+	public void a_user_is_registered_with_the_library() 
+	{
+		user=new User(120,"ahmad","ahmad11@gmail.com","rafidia street","HF99S","Nablus");
+		app.login("adminadmin");
+		app.registerUser(120,"ahmad","ahmad11@gmail.com","rafidia street","HF99S","Nablus");
+	}
+	
+	@When("the user borrows the book with code {string}")
+	public void the_user_borrows_the_book_with_code(String string) 
+	{
+		oldSize=(user!=null&&book!=null)?app.getUsers()
+	                                        .get(app.getUsers().indexOf(user))
+	                                        .getBorrowedBooks()
+	                                        .size()            
+	                                    :-1;
+		
+		try{app.checkOverDueBooks(); app.borrowBook(user,book);}
+			catch(IllegalStateException|IllegalArgumentException ex) 
+				{errorMessage.setException(ex); logFile.appendMessage(ex.getMessage());}
+	}
+	
+	@Then("the book with code {string} is not borrowed by the user")
+	public void the_book_with_code_is_not_borrowed_by_the_user(String string) 
+	{
+		assertTrue(app.getUsers()
+	               .get(app.getUsers().indexOf(user))
+	               .getBorrowedBooks()
+	               .stream()
+	               .filter(e->e.getIsbn().equals(string))
+	               .toList()
+	               .size()==0);
+	}
+	
+	@Then("the user has to pay a fine of {int} NIS for that late book")
+	public void the_user_has_to_pay_a_fine_of_nis_for_that_late_book(Integer int1)
+	{
+		assertTrue(app.getUsers().get(app.getUsers().indexOf(user)).getTotalFines()==int1);
+	}
+	
+	@When("the user returns the book with code {string}")
+	public void the_user_returns_the_book_with_code(String string) 
+	{
+		oldSize=(user!=null&&book!=null)?app.getUsers()
+										    .get(app.getUsers().indexOf(user))
+										    .getBorrowedBooks()
+										    .size()
+										:-1;
+
+		try {app.checkOverDueBooks(); app.returnBook(user,book);}
+			catch(IllegalStateException|IllegalArgumentException ex) 
+				{errorMessage.setException(ex); logFile.appendMessage(ex.getMessage());}
 	}
 }

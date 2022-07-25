@@ -1,18 +1,31 @@
 package se.elib;
 
+import java.util.Calendar;
+
 public class Book 
 {
 	private String name;
 	private String author;
 	private String isbn;
-	private boolean availability;
 	
-	public Book(String name,String author,String isbn,boolean availability)
+	private Calendar borrowDate;
+	private Calendar dueDate;
+	
+	private boolean isOverDue;
+	private boolean availability;
+	public static final int BOOK_FINE=30;
+	
+	public Book(String name,String author,String isbn)
 	{
 		setName(name);
 		setAuthor(author);
 		setIsbn(isbn);
-		setAvailability(availability);
+		
+		setAvailability(true);
+		setOverDue(false);
+		
+		setBorrowDate(null);
+		setDueDate(null);
 	}
 
 	public String getName() 
@@ -53,6 +66,41 @@ public class Book
 	public void setAvailability(boolean availability) 
 	{
 		this.availability = availability;
+	}
+	
+	public Calendar getBorrowDate() 
+	{
+		return borrowDate;
+	}
+	
+	public void setBorrowDate(Calendar borrowDate) 
+	{
+		this.borrowDate=borrowDate;
+	}
+	
+	public Calendar getDueDate() 
+	{
+		return dueDate;
+	}
+
+	public void setDueDate(Calendar dueDate) 
+	{
+		this.dueDate = dueDate;
+	}
+	
+	public boolean getOverDue() 
+	{
+		return isOverDue;
+	}
+
+	public void setOverDue(boolean isOverDue) 
+	{
+		this.isOverDue = isOverDue;
+	}
+	
+	public boolean checkOverDue(Calendar currentDate) 
+	{
+		return (!availability&&currentDate.after(dueDate));
 	}
 	
 	@Override
