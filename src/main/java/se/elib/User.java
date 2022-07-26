@@ -2,7 +2,6 @@ package se.elib;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 public class User 
@@ -102,15 +101,11 @@ public class User
 	
 	public void borrowBook(Book book,Calendar borrowDate)
 	{
-		Calendar dueDate = new GregorianCalendar();
-		dueDate.setTime(borrowDate.getTime());
-		dueDate.add(Calendar.DAY_OF_YEAR, 21);
-		
 		borrowedBooks.add(book);
 		book.setAvailability(false);
 		
 		book.setBorrowDate(borrowDate);
-		book.setDueDate(dueDate);
+		book.calcAndSetDueDate(borrowDate);
 		book.setOverDue(false);
 	}
 	
@@ -120,7 +115,7 @@ public class User
 		book.setAvailability(true);
 		
 		book.setBorrowDate(null);
-		book.setDueDate(null);
+		book.resetDueDate();
 		book.setOverDue(false);
 	}
 	

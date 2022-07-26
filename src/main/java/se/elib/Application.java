@@ -21,6 +21,8 @@ public class Application
 	private EmailServer emailServer;
 	private Logger logger;
 	
+	private String adminErrorMessage="Administrator login required";
+	
 	public Application()
 	{
 		setUsers(new ArrayList<>());
@@ -111,13 +113,13 @@ public class Application
 	public void checkOverDueBooks()
 	{
 		users.stream().forEach(e->
-		{
+		
 			e.getBorrowedBooks().stream().forEach(i->
 			{
 				if(i.checkOverDue(dateServer.getDate()))
-					{i.setOverDue(true); e.addFine(Book.BOOK_FINE);}
-			});
-		});
+					{i.setOverDue(true); e.addFine(i.getFine());}
+			})
+		);
 	}
 	
 	public void login(String password)
@@ -142,7 +144,7 @@ public class Application
 	public void addBook(String name,String author,String isbn) throws IllegalStateException , IllegalArgumentException
 	{
 		if(!isAdminLogedIn) 
-			{throw new IllegalStateException ("Administrator login required");}
+			{throw new IllegalStateException (adminErrorMessage);}
 		
 		else if(name==null||author==null||isbn==null) 
 			{throw new IllegalArgumentException("Missing some book information");}
@@ -174,7 +176,7 @@ public class Application
 	public void registerUser(int id, String name, String email, String address, String postalCode, String city) throws IllegalStateException , IllegalArgumentException
 	{
 		if(!isAdminLogedIn) 
-			{throw new IllegalStateException ("Administrator login required");}
+			{throw new IllegalStateException (adminErrorMessage);}
 		
 		else if(name==null||email==null||address==null||postalCode==null||city==null) 
 			{throw new IllegalArgumentException("Missing some user information");}
@@ -196,12 +198,12 @@ public class Application
 	public void unregisterUser(User user) 
 	{
 		if(!isAdminLogedIn) 
-			{throw new IllegalStateException ("Administrator login required");}
+			{throw new IllegalStateException (adminErrorMessage);}
 	
 		else if(user==null||users.indexOf(user)==-1) 
 			{throw new IllegalArgumentException("user not found");}
 	
-		else if(users.get(users.indexOf(user)).getBorrowedBooks().size()!=0)
+		else if(!users.get(users.indexOf(user)).getBorrowedBooks().isEmpty())
 			{throw new IllegalStateException("you can't unregister this user because he have some borrowed books to return");}
 		
 		else if(users.get(users.indexOf(user)).getTotalFines()!=0)
@@ -218,7 +220,7 @@ public class Application
 		else if(book==null||books.indexOf(book)==-1) 
 			{throw new IllegalArgumentException("Book not found");}
 		
-		else if(users.get(users.indexOf(user)).getBorrowedBooks().stream().filter(e->e.getOverDue()).collect(Collectors.toList()).size()!=0)
+		else if(!users.get(users.indexOf(user)).getBorrowedBooks().stream().filter(Book::getOverDue).collect(Collectors.toList()).isEmpty())
 			{throw new IllegalStateException ("You can't borrow any new book because you have an overdue books");}
 		
 		else if(users.get(users.indexOf(user)).getTotalFines()!=0)

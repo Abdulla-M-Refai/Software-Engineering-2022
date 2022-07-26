@@ -1,4 +1,6 @@
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
 import java.util.stream.Collectors;
 
 import io.cucumber.java.en.Given;
@@ -67,20 +69,20 @@ public class TimeSteps
 	@Then("the user has Late books")
 	public void the_user_has_late_books() 
 	{
-		assertTrue(app.getUsers()
-					  .get(app.getUsers().indexOf(user))
-					  .getBorrowedBooks()
-					  .stream()
-					  .filter(e->e.getOverDue())
-					  .collect(Collectors.toList())
-					  .size()!=0);
+		assertNotEquals(app.getUsers()
+						   .get(app.getUsers().indexOf(user))
+						   .getBorrowedBooks()
+						   .stream()
+						   .filter(e->e.getOverDue())
+						   .collect(Collectors.toList())
+						   .size(),0);
 	}
 	
 	@Then("the user has to pay a fine of {int} NIS")
 	public void the_user_has_to_pay_a_fine_of_nis(Integer int1) 
 	{
-		assertTrue(int1==(app.getUsers()
-		 			         .get(app.getUsers().indexOf(user))
-		 			         .getTotalFines()-oldFinesValue));
+		assertEquals(int1.intValue(),(app.getUsers()
+					 			         .get(app.getUsers().indexOf(user))
+					 			         .getTotalFines()-oldFinesValue));
 	}
 }

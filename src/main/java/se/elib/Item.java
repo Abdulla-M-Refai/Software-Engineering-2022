@@ -1,8 +1,9 @@
 package se.elib;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
-public class Book 
+public abstract class Item 
 {
 	private String name;
 	private String author;
@@ -13,9 +14,8 @@ public class Book
 	
 	private boolean isOverDue;
 	private boolean availability;
-	public static final int BOOK_FINE=30;
 	
-	public Book(String name,String author,String isbn)
+	protected Item(String name,String author,String isbn)
 	{
 		setName(name);
 		setAuthor(author);
@@ -25,7 +25,7 @@ public class Book
 		setOverDue(false);
 		
 		setBorrowDate(null);
-		setDueDate(null);
+		resetDueDate();
 	}
 
 	public String getName() 
@@ -83,9 +83,17 @@ public class Book
 		return dueDate;
 	}
 
-	public void setDueDate(Calendar dueDate) 
+	public void calcAndSetDueDate(Calendar borrowDate)
 	{
-		this.dueDate = dueDate;
+		Calendar date = new GregorianCalendar();
+		date.setTime(borrowDate.getTime());
+		date.add(Calendar.DAY_OF_YEAR, 21);
+		this.dueDate = date;
+	}
+	
+	public void resetDueDate()
+	{
+		dueDate=null;
 	}
 	
 	public boolean getOverDue() 
@@ -103,15 +111,17 @@ public class Book
 		return (!availability&&currentDate.after(dueDate));
 	}
 	
+	public abstract int getFine();
+	
 	@Override
 	public boolean equals(Object o) 
 	{
 		if ((o == null)||(this.getClass() != o.getClass())) {return false;}
 
-		Book book = (Book) o; 
-		return ((this.isbn.equals(book.isbn))     &&
-				(this.author.equals(book.author)) &&
-				(this.name.equals(book.name)));
+		Item item = (Item) o; 
+		return ((isbn.equals(item.isbn))     &&
+				(author.equals(item.author)) &&
+				(name.equals(item.name)));
 	}
 	
 	@Override

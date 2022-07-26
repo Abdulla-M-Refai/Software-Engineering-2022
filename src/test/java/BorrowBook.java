@@ -1,3 +1,4 @@
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -50,6 +51,15 @@ public class BorrowBook
 	    });
 	}
 	
+	private void calcOldSize() 
+	{
+		oldSize=(user!=null&&book!=null)?app.getUsers()
+	                                        .get(app.getUsers().indexOf(user))
+	                                        .getBorrowedBooks()
+	                                        .size()            
+	                                    :-1;
+	}
+	
 	@Given("these books in the system")
 	public void these_books_in_the_system(io.cucumber.datatable.DataTable dataTable) 
 	{
@@ -87,11 +97,7 @@ public class BorrowBook
 	@When("the user borrows that book")
 	public void the_user_borrows_that_book() 
 	{
-		oldSize=(user!=null&&book!=null)?app.getUsers()
-	    			                        .get(app.getUsers().indexOf(user))
-	    			                        .getBorrowedBooks()
-	    			                        .size()            
-	    			                    :-1;
+		calcOldSize();
 
 		try{app.borrowBook(user,book);}
 			catch(IllegalStateException|IllegalArgumentException ex) 
@@ -185,11 +191,7 @@ public class BorrowBook
 	@When("the user borrows the book with code {string}")
 	public void the_user_borrows_the_book_with_code(String string) 
 	{
-		oldSize=(user!=null&&book!=null)?app.getUsers()
-	                                        .get(app.getUsers().indexOf(user))
-	                                        .getBorrowedBooks()
-	                                        .size()            
-	                                    :-1;
+		calcOldSize();
 		
 		try{app.checkOverDueBooks(); app.borrowBook(user,book);}
 			catch(IllegalStateException|IllegalArgumentException ex) 
@@ -199,29 +201,25 @@ public class BorrowBook
 	@Then("the book with code {string} is not borrowed by the user")
 	public void the_book_with_code_is_not_borrowed_by_the_user(String string) 
 	{
-		assertTrue(app.getUsers()
-	               .get(app.getUsers().indexOf(user))
-	               .getBorrowedBooks()
-	               .stream()
-	               .filter(e->e.getIsbn().equals(string))
-	               .toList()
-	               .size()==0);
+		assertEquals(0,app.getUsers()
+		                .get(app.getUsers().indexOf(user))
+		                .getBorrowedBooks()
+		                .stream()
+		                .filter(e->e.getIsbn().equals(string))
+		                .toList()
+		                .size());
 	}
 	
 	@Then("the user has to pay a fine of {int} NIS for that late book")
 	public void the_user_has_to_pay_a_fine_of_nis_for_that_late_book(Integer int1)
 	{
-		assertTrue(app.getUsers().get(app.getUsers().indexOf(user)).getTotalFines()==int1);
+		assertEquals(int1.intValue(),app.getUsers().get(app.getUsers().indexOf(user)).getTotalFines());
 	}
 	
 	@When("the user returns the book with code {string}")
 	public void the_user_returns_the_book_with_code(String string) 
 	{
-		oldSize=(user!=null&&book!=null)?app.getUsers()
-										    .get(app.getUsers().indexOf(user))
-										    .getBorrowedBooks()
-										    .size()
-										:-1;
+		calcOldSize();
 
 		try {app.checkOverDueBooks(); app.returnBook(user,book);}
 			catch(IllegalStateException|IllegalArgumentException ex) 
