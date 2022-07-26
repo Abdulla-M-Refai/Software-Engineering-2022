@@ -202,12 +202,12 @@ public class BorrowBook
 	public void the_book_with_code_is_not_borrowed_by_the_user(String string) 
 	{
 		assertEquals(0,app.getUsers()
-		                .get(app.getUsers().indexOf(user))
-		                .getBorrowedBooks()
-		                .stream()
-		                .filter(e->e.getIsbn().equals(string))
-		                .toList()
-		                .size());
+			               .get(app.getUsers().indexOf(user))
+			               .getBorrowedBooks()
+			               .stream()
+			               .filter(e->e.getIsbn().equals(string))
+			               .toList()
+			               .size());
 	}
 	
 	@Then("the user has to pay a fine of {int} NIS for that late book")
