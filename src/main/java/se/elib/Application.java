@@ -96,7 +96,7 @@ public class Application
 	public void sendReminder() throws IllegalStateException
 	{
 		if(!isAdminLogedIn)
-			{throw new IllegalStateException("Administrator login required");}
+			{throw new IllegalStateException(adminErrorMessage);}
 		
 		users.stream().forEach(e->
 		{
@@ -116,7 +116,7 @@ public class Application
 	public void checkOverDueBooks() throws IllegalStateException
 	{
 		if(!isAdminLogedIn)
-			{throw new IllegalStateException("Administrator login required");}
+			{throw new IllegalStateException(adminErrorMessage);}
 		
 		users.stream().forEach(e->
 		
